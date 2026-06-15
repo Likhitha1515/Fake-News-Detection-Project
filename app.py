@@ -1,8 +1,8 @@
+import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 
 # Load datasets
 fake = pd.read_csv("fake news.csv")
@@ -14,14 +14,15 @@ true["label"] = 1
 
 # Combine datasets
 data = pd.concat([fake, true], ignore_index=True)
-x = data["text"]
+
+# Remove unnamed columns
 data = data.loc[:, ~data.columns.str.contains("^Unnamed")]
 
-# Select text and label columns
+# Prepare data
 X = data["text"]
 y = data["label"]
 
-# Convert text into numbers
+# TF-IDF
 vectorizer = TfidfVectorizer(stop_words="english", max_features=5000)
 X = vectorizer.fit_transform(X)
 
@@ -34,21 +35,16 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = LogisticRegression()
 model.fit(X_train, y_train)
 
-# Predictions
-y_pred = model.predict(X_test)
+# Website UI
+st.title("📰 Fake News Detection System")
 
-# Accuracy
-accuracy = accuracy_score(y_test, y_pred)
-print("Model Accuracy:", round(accuracy * 100, 2), "%")# Train model
-news = input("\nEnter a news article: ")
+news = st.text_area("Enter a news article")
 
-news_vector = vectorizer.transform([news])
+if st.button("Predict"):
+    news_vector = vectorizer.transform([news])
+    prediction = model.predict(news_vector)
 
-prediction = model.predict(news_vector)
-print("prediction value:",prediction[0])
-
-if prediction[0] == 1:
-    print("✅ Real News")
-else:
-    print("❌ Fake News")
-     
+    if prediction[0] == 1:
+        st.success("✅ Real News")
+    else:
+        st.error("❌ Fake News")
