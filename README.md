@@ -30,7 +30,17 @@ Fake-News-Detection/
 ├── Fake.csv
 ├── True.csv
 ├── fake_news_detection.py
-├── requirements.txt
 └── README.md
 
+**model accuracy**
+model Accuracy: 98.66%
+
+**Technologies used**
+1) python
+2) pandas(Data processing)
+3) Numpy(Numerical Computing)
+4) Scikit-learn(Machine Learning)
+5) TF-IDF Vectorization(Text Feature Extraction)
+6) Logistic Regression(Classification Algorithm)
+7) CSV Dataset Handling
 
